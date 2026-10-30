@@ -252,7 +252,7 @@ body.dragging #pet {
   left: 50%;
   width: 480px;
   max-width: calc(100% - 24px);
-  max-height: 60vh;
+  max-height: 78vh;
   /* 창이 낮으면 본문만 스크롤하고 제목 · 버튼은 늘 보이게 */
   display: flex;
   flex-direction: column;

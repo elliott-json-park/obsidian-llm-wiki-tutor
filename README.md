@@ -2,6 +2,8 @@
 
 **Learn Obsidian and build your first LLM Wiki with a pixel cat that walks your workspace and teaches you step by step.**
 
+![The cat explains the wiki as it grows in Graph view, with lesson notes in the side panel](docs/listing/1-graph.png)
+
 You saw "a wiki the AI keeps for you" somewhere and wanted one — but you don't know Obsidian, and the tutorials assume a terminal. This plugin puts a small cat on the floor of your workspace. It explains one idea at a time in plain words (files in the raw folder are your *ingredients*, ingest is *cooking*), points at the exact folder or button, waits until you actually did the thing, and does it for you if you get stuck. A side panel keeps short lesson notes as the cat talks. Everything happens inside one practice folder in your real vault. It never calls an AI itself and never touches your other notes.
 
 ## What you learn
