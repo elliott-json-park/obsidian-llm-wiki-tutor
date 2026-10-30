@@ -1,0 +1,519 @@
+:root {
+  --ink: #3a2118;
+  --paper: #fffaf3;
+  --paper2: #f6eee2;
+  --accent: #d97757;
+  --accent2: #5b8a72;
+  --muted: #8b6f60;
+  --line: #e7d9c6;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+  font-family: 'Pretendard', 'Malgun Gothic', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  cursor: default;
+}
+
+/* 고양이 자리(left·bottom)는 pet.js 가 정한다 */
+#pet {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+  image-rendering: pixelated;
+  cursor: grab;
+}
+body.dragging #pet {
+  cursor: grabbing;
+}
+
+#floor-shadow {
+  position: absolute;
+  z-index: 1;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* 화살표 · 종이 날리기를 그리는 화면 전체 캔버스. 마우스는 통과시킨다 */
+#field {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* 입에 문 종이 · 날아가는 종이 */
+.paper {
+  position: absolute;
+  z-index: 3;
+  width: 18px;
+  height: 23px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  box-shadow: 2px 2px 0 rgba(58, 33, 24, 0.25);
+  pointer-events: none;
+}
+.paper::before,
+.paper::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  height: 2px;
+  background: #c9b8a8;
+}
+.paper::before {
+  top: 5px;
+}
+.paper::after {
+  top: 11px;
+}
+
+/* ---------- 말풍선 (학습 패널) ---------- */
+
+.bubble {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  max-width: 480px;
+  min-width: 220px;
+  width: max-content;
+  box-sizing: border-box;
+  padding: 12px 14px 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  border: 2.5px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 rgba(58, 33, 24, 0.22);
+  transform: translateX(-50%) scale(0.6);
+  transform-origin: 50% 100%;
+  opacity: 0;
+  transition: transform 0.18s steps(3), opacity 0.12s;
+  cursor: pointer;
+}
+.bubble.show {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+}
+.bubble::before,
+.bubble::after {
+  content: '';
+  position: absolute;
+  left: calc(50% + var(--tail-x, 0px));
+  width: 0;
+  height: 0;
+  border: solid transparent;
+}
+.bubble::before {
+  bottom: -13px;
+  margin-left: -9px;
+  border-width: 11px 9px 0;
+  border-top-color: var(--ink);
+}
+.bubble::after {
+  bottom: -8px;
+  margin-left: -6px;
+  border-width: 7px 6px 0;
+  border-top-color: var(--paper);
+}
+.bubble.below {
+  transform-origin: 50% 0;
+}
+.bubble.below::before {
+  bottom: auto;
+  top: -13px;
+  border-width: 0 9px 11px;
+  border-top-color: transparent;
+  border-bottom-color: var(--ink);
+}
+.bubble.below::after {
+  bottom: auto;
+  top: -8px;
+  border-width: 0 6px 7px;
+  border-top-color: transparent;
+  border-bottom-color: var(--paper);
+}
+.bubble.cheer {
+  background: #fff4c7;
+  --paper: #fff4c7;
+}
+.bubble .title {
+  display: block;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.bubble .title:empty {
+  display: none;
+}
+.bubble .text {
+  display: block;
+}
+.bubble .text b {
+  color: #1f1410;
+  background: linear-gradient(transparent 60%, #ffe2a8 60%);
+}
+.bubble .text code {
+  font-family: Consolas, 'D2Coding', monospace;
+  font-size: 13.5px;
+  background: var(--paper2);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* 고양이 질문의 고를 것 (두 개까지) */
+.bubble .choices {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.bubble .choices:empty {
+  display: none;
+}
+.bubble .choices button,
+.card-buttons button {
+  flex: 1 0 auto;
+  white-space: nowrap;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 14px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(58, 33, 24, 0.25);
+}
+.bubble .choices button:hover,
+.card-buttons button:hover {
+  background: #ffe9c7;
+  transform: translateY(-1px);
+}
+.bubble .choices button:first-child,
+.card-buttons button.primary {
+  background: #ffe2a8;
+}
+
+/* 좌측 하단 "← 이전" · 우측 하단 "다음 →" */
+.bubble .nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+.bubble .nav[hidden] {
+  display: none;
+}
+.bubble .nav button {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  padding: 2px 0;
+  cursor: pointer;
+}
+.bubble .nav button:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.bubble .nav button:empty {
+  visibility: hidden;
+}
+/* 지난 말을 다시 보는 중 */
+.bubble.past {
+  background: #f3ece2;
+  --paper: #f3ece2;
+}
+
+/* ---------- 카드 (긴 설명) ---------- */
+
+.card {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  width: 480px;
+  max-width: calc(100% - 24px);
+  max-height: 60vh;
+  /* 창이 낮으면 본문만 스크롤하고 제목 · 버튼은 늘 보이게 */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 14px 16px 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.55;
+  word-break: keep-all;
+  border: 2.5px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 5px 5px 0 rgba(58, 33, 24, 0.22);
+  transform: translateX(-50%) scale(0.8);
+  opacity: 0;
+  transition: transform 0.18s steps(3), opacity 0.12s;
+}
+.card.show {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+}
+.card-title {
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px dashed var(--line);
+}
+.card[hidden] {
+  display: none;
+}
+.card-title,
+.card > .figure,
+.card-buttons,
+.card > .hint {
+  flex-shrink: 0;
+}
+.card-body {
+  min-height: 0;
+  overflow-y: auto;
+}
+.card-body p {
+  margin: 0 0 8px;
+}
+.card-body p:last-child {
+  margin-bottom: 0;
+}
+.card-body code,
+.figure code {
+  font-family: Consolas, 'D2Coding', monospace;
+  font-size: 13.5px;
+  background: var(--paper2);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.card-body b {
+  background: linear-gradient(transparent 60%, #ffe2a8 60%);
+}
+.card-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.card-buttons:empty {
+  display: none;
+}
+.card-buttons button {
+  flex: 0 0 auto;
+  border-radius: 8px;
+}
+.card .hint {
+  display: block;
+  text-align: right;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.card .hint:empty {
+  display: none;
+}
+
+/* ---------- 인포그래픽 ---------- */
+
+.figure {
+  margin: 8px 0 4px;
+  padding: 10px 12px;
+  background: var(--paper2);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+.figure:empty {
+  display: none;
+}
+.fig-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.fig-box {
+  flex: 1 1 auto;
+  min-width: fit-content;
+  max-width: 100%;
+  padding: 8px 8px 7px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  text-align: center;
+}
+.fig-box .ico {
+  font-size: 22px;
+  line-height: 1;
+  display: block;
+  margin-bottom: 4px;
+}
+.fig-box .name {
+  display: block;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.fig-box .sub {
+  display: block;
+  color: var(--muted);
+  font-size: 11.5px;
+  max-width: 11em;
+  margin: 0 auto;
+}
+.fig-box.ai {
+  border-color: var(--accent2);
+  background: #eef5f0;
+}
+.fig-box.me {
+  border-color: var(--accent);
+  background: #fff2ea;
+}
+.fig-arrow {
+  align-self: center;
+  font-size: 18px;
+  color: var(--muted);
+}
+.fig-note {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 11.5px;
+  text-align: center;
+}
+/* 마크다운 입력 → 결과 */
+.fig-md {
+  display: grid;
+  grid-template-columns: 1fr 24px 1fr;
+  gap: 4px 6px;
+  align-items: center;
+}
+.fig-md code {
+  display: block;
+  padding: 3px 7px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 5px;
+}
+.fig-md .arrow {
+  text-align: center;
+  color: var(--muted);
+}
+.fig-md .out {
+  padding: 3px 7px;
+}
+.fig-md .out.h {
+  font-size: 18px;
+  font-weight: 800;
+}
+.fig-md .out.b b {
+  background: none;
+}
+.fig-md .out.li::before {
+  content: '• ';
+}
+/* 종이 두 장 + 실 */
+.fig-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+.fig-link .sheet {
+  padding: 8px 10px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  font-weight: 700;
+}
+.fig-link .thread {
+  width: 60px;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 10px);
+}
+/* 순환 */
+.fig-loop {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.fig-loop .step {
+  white-space: nowrap;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  font-weight: 700;
+}
+.fig-loop .step.ai {
+  border-color: var(--accent2);
+  background: #eef5f0;
+}
+
+/* ---------- 직전 말 다시 보기 ---------- */
+
+.replay {
+  position: absolute;
+  z-index: 6;
+  padding: 5px 10px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 2px 2px 0 rgba(58, 33, 24, 0.25);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.replay:hover {
+  background: #ffe9c7;
+}
+
+/* ---------- 가리키기 표식 (라벨. 화살표와 과녁은 #field 에 그린다) ---------- */
+
+.point {
+  position: absolute;
+  z-index: 5;
+  padding: 3px 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+[hidden]:not(#lwt-a):not(#lwt-b) {
+  display: none;
+}

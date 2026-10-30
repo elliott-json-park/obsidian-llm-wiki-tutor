@@ -1,0 +1,5 @@
+/* iframe 안에만 더하는 스타일. 펫 무대는 투명하다 */
+html.lwt-pet,
+html.lwt-pet body {
+  background: transparent;
+}

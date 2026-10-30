@@ -1,0 +1,362 @@
+/* LLM Wiki Tutor — 옵시디언 쪽 스타일. 고양이 화면은 iframe 안에 따로 스타일이 있다 (src/kit/pet.css) */
+
+/* 펫 무대: 작업 영역 위에 덮는 투명한 판. 고양이 위에서만 마우스를 받는다 (plugin/stage.js) */
+.lwt-stage {
+  position: fixed;
+  z-index: 29; /* 작업 영역·상태 표시줄 위, 미리보기 팝오버(30)·모달·메뉴 아래 */
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+}
+
+.lwt-stage .lwt-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color-scheme: normal;
+}
+
+/* 테마가 iframe 전체에 거는 꾸밈(배경·테두리·그림자)을 막는다 (Vault Pet 이슈 #3) */
+iframe.lwt-frame:not(#lwt-none) {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* 쓰기 미리보기 모달 (plugin/preview.js) */
+.lwt-preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-2);
+  margin: var(--size-4-2) 0 var(--size-4-4);
+}
+.lwt-preview-item {
+  padding: var(--size-4-2) var(--size-4-3);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+}
+.lwt-preview-path {
+  font-weight: var(--font-semibold);
+}
+.lwt-preview-body {
+  margin: var(--size-4-1) 0 0;
+  padding: var(--size-4-2);
+  font-size: var(--font-ui-smaller);
+  background: var(--background-primary);
+  border-radius: var(--radius-s);
+  white-space: pre-wrap;
+}
+.lwt-preview-buttons {
+  display: flex;
+  gap: var(--size-4-2);
+  justify-content: flex-end;
+}
+
+/* 붙여넣기 창 (plugin/paste.js) */
+.lwt-paste-help {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+.lwt-paste-area {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-monospace);
+  font-size: var(--font-ui-small);
+  margin-bottom: var(--size-4-3);
+}
+
+/* 진행 지도 (plugin/mapview.js) — 미니멀: 도넛 + 두 목록 */
+.lwt-map {
+  padding: var(--size-4-4) var(--size-4-3);
+  font-size: var(--font-ui-small);
+}
+.lwt-map-head {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-3);
+  margin-bottom: var(--size-4-5);
+}
+.lwt-map-donut {
+  flex: 0 0 112px;
+  width: 112px;
+  height: 112px;
+}
+.lwt-donut {
+  width: 112px;
+  height: 112px;
+  display: block;
+}
+.lwt-donut-seg.is-done {
+  fill: var(--interactive-accent);
+}
+.lwt-donut-seg.is-cur {
+  fill: var(--interactive-accent);
+  opacity: 0.45;
+}
+.lwt-donut-seg.is-todo {
+  fill: var(--background-modifier-border);
+}
+.lwt-donut-pct {
+  font-size: 20px;
+  font-weight: 700;
+  fill: var(--text-normal);
+}
+.lwt-donut-sub {
+  font-size: 10px;
+  fill: var(--text-muted);
+}
+.lwt-map-now {
+  flex: 1;
+  min-width: 0;
+}
+.lwt-map-eyebrow {
+  font-size: var(--font-ui-smaller);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.lwt-map-now-title {
+  font-weight: var(--font-semibold);
+  font-size: var(--font-ui-medium);
+  margin: 2px 0;
+  line-height: 1.3;
+}
+.lwt-map-now-sub {
+  color: var(--text-muted);
+  margin-bottom: var(--size-4-2);
+}
+.lwt-map-go {
+  margin-top: var(--size-4-1);
+}
+.lwt-map-course {
+  margin-bottom: var(--size-4-4);
+}
+.lwt-map-course-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--size-4-2);
+  margin-bottom: var(--size-4-1);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  cursor: pointer;
+  user-select: none;
+}
+/* 접었다 펴기 */
+.lwt-map-fold {
+  display: inline-block;
+  width: 1em;
+  color: var(--text-faint);
+  transition: transform 0.15s ease;
+}
+.lwt-map-course.is-folded .lwt-map-fold {
+  transform: rotate(-90deg);
+}
+.lwt-map-course.is-folded .lwt-map-rows {
+  display: none;
+}
+.lwt-map-course.is-folded .lwt-map-course-head {
+  margin-bottom: 0;
+}
+.lwt-map-course-name {
+  font-weight: var(--font-semibold);
+}
+.lwt-map-count {
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+.lwt-map-skip {
+  margin-left: auto;
+  font-size: var(--font-ui-smaller);
+  padding: 1px 8px;
+  height: auto;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+}
+.lwt-map-skip:hover {
+  color: var(--text-normal);
+}
+.lwt-map-lesson {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  border-radius: var(--radius-s);
+  cursor: pointer;
+}
+.lwt-map-lesson:hover {
+  background: var(--background-modifier-hover);
+}
+.lwt-map-mark {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--background-modifier-border);
+  flex: 0 0 8px;
+}
+.lwt-map-lesson.is-done .lwt-map-mark {
+  background: var(--interactive-accent);
+}
+.lwt-map-lesson.is-cur .lwt-map-mark {
+  background: var(--interactive-accent);
+  box-shadow: 0 0 0 3px var(--background-modifier-hover);
+}
+.lwt-map-lesson.is-done {
+  color: var(--text-muted);
+}
+.lwt-map-lesson.is-cur {
+  font-weight: var(--font-semibold);
+}
+/* 앞 레슨을 마쳐야 열리는 레슨 */
+.lwt-map-lesson.is-locked {
+  color: var(--text-faint);
+  cursor: not-allowed;
+}
+.lwt-map-lesson.is-locked:hover {
+  background: transparent;
+}
+.lwt-map-lesson.is-locked .lwt-map-min {
+  font-size: 0.85em;
+}
+.lwt-map-id {
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+  width: 1.9em;
+  flex: 0 0 auto;
+}
+.lwt-map-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lwt-map-min {
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+.lwt-map-foot {
+  margin-top: var(--size-4-2);
+  display: flex;
+  justify-content: flex-end;
+}
+.lwt-map-reset {
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+.lwt-map-reset:hover {
+  color: var(--text-normal);
+}
+
+/* 필기 노트 (plugin/mapview.js · plugin/notes.js) */
+.lwt-notes {
+  margin-top: var(--size-4-5);
+  border-top: 1px solid var(--background-modifier-border);
+  padding-top: var(--size-4-3);
+}
+.lwt-notes-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--size-4-2);
+}
+.lwt-notes-title {
+  font-weight: var(--font-semibold);
+  font-size: var(--font-ui-medium);
+}
+.lwt-notes-all {
+  font-size: var(--font-ui-smaller);
+  padding: 2px 10px;
+  height: auto;
+}
+/* 상자 · 배경 없이 소제목 왼쪽 굵은 줄과 항목의 가는 들여쓰기 선만 */
+.lwt-notes-page {
+  position: relative;
+  line-height: 1.6;
+  font-size: 13.5px;
+  min-height: 96px;
+}
+.lwt-notes-lesson {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-faint);
+  margin-bottom: 6px;
+}
+.lwt-notes-empty {
+  color: var(--text-faint);
+}
+.lwt-notes-empty.is-hidden {
+  display: none;
+}
+.lwt-notes-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* 항목 한 줄 */
+.lwt-note {
+  position: relative;
+  margin: 0 0 0 4px;
+  padding-left: 14px;
+  border-left: 1px solid var(--background-modifier-border);
+}
+.lwt-note + .lwt-note:not(.is-head) {
+  padding-top: 3px;
+}
+/* 소제목: 왼쪽 굵은 보라 줄, 묶음 사이는 조금 띄운다 */
+.lwt-note.is-head {
+  margin: 20px 0 2px;
+  padding-left: 10px;
+  border-left: 3px solid var(--text-accent);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.35;
+}
+.lwt-note.is-head:first-child {
+  margin-top: 0;
+}
+/* 번호 */
+.lwt-note-num {
+  margin-right: 6px;
+  font-weight: 700;
+  color: var(--text-accent);
+  font-variant-numeric: tabular-nums;
+}
+/* "말 — 설명": 말은 굵게, 설명은 · 뒤에 흐리게 이어서 */
+.lwt-note-key {
+  font-weight: var(--font-semibold);
+}
+.lwt-note-desc {
+  color: var(--text-muted);
+}
+.lwt-note-desc::before {
+  content: ' · ';
+  color: var(--text-faint);
+}
+.lwt-note code {
+  font-size: 0.92em;
+}
+/* 쓰는 중인 줄 끝의 깜빡이는 펜 끝 */
+.lwt-note.is-writing::after {
+  content: '▍';
+  color: var(--text-accent);
+  animation: lwt-pen 0.8s steps(1) infinite;
+}
+@keyframes lwt-pen {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* 처음부터 모달 */
+.lwt-restart p {
+  color: var(--text-muted);
+}
+
+.lwt-disclaimer {
+  margin-top: 18px;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+}

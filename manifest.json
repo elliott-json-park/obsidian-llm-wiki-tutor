@@ -1,0 +1,10 @@
+{
+  "id": "llm-wiki-tutor",
+  "name": "LLM Wiki Tutor",
+  "version": "1.0.0",
+  "minAppVersion": "1.5.0",
+  "description": "Learn Obsidian and build your first LLM Wiki with a pixel cat that walks your workspace, explains with plain analogies, points at what to click and waits until you did it. No AI key needed.",
+  "author": "Elliott Park",
+  "authorUrl": "https://github.com/elliott-json-park",
+  "isDesktopOnly": true
+}
