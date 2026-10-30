@@ -1,5 +1,5 @@
 /*
- * LLM Wiki Tutor 1.0.1 — Obsidian plugin (built 2026-10-30)
+ * LLM Wiki Tutor 1.0.2 — Obsidian plugin (built 2026-10-30)
  * 소스: src/ (node scripts/build.js 로 이 파일을 만든다)
  * 고양이 렌더러는 Vault Pet (MIT) 에서 가져왔다.
  */
