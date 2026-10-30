@@ -50,7 +50,7 @@ Click the cat to pet it, drag it to move it, double-click to open the map, right
 
 ## Install
 
-Until the plugin is listed in Community plugins, install it by hand: download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/elliott-json-park/obsidian-llm-wiki-tutor/releases/latest) into `<your vault>/.obsidian/plugins/llm-wiki-tutor/`, then enable **LLM Wiki Tutor** under Settings → Community plugins. You can also add this repository in [BRAT](https://github.com/TfTHacker/obsidian42-brat).
+In Obsidian, open Settings → Community plugins → Browse, search for **LLM Wiki Tutor**, then install and enable it. Or open the [directory page](https://community.obsidian.md/plugins/llm-wiki-tutor) and click **Add to Obsidian**.
 
 ## Languages
 
